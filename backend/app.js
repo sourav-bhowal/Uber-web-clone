@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const connectDB = require("./lib/db");
 const userRoutes = require("./routes/user.routes")
@@ -19,6 +20,9 @@ app.use(express.json());
 
 // Express middleware to parse the incoming requests with urlencoded payloads
 app.use(express.urlencoded({ extended: true }));
+
+// Express middleware to parse the cookies
+app.use(cookieParser());
 
 // Use the user routes
 app.use("/api/users", userRoutes);
