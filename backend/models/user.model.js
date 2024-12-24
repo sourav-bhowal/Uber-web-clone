@@ -3,40 +3,45 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // User Schema for MongoDB database
-const userSchema = mongoose.Schema({
-  fullName: {
-    firstName: {
+const userSchema = mongoose.Schema(
+  {
+    fullName: {
+      firstName: {
+        type: String,
+        minLength: [3, "First name must be at least 3 characters long"],
+        required: true,
+        trim: true,
+      },
+      lastName: {
+        type: String,
+        minLength: [3, "Last name must be at least 3 characters long"],
+      },
+    },
+    email: {
       type: String,
-      minLength: [3, "First name must be at least 3 characters long"],
       required: true,
       trim: true,
+      unique: true,
+      match: [
+        /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
+        "Please fill a valid email address",
+      ],
     },
-    lastName: {
+    password: {
       type: String,
-      minLength: [3, "Last name must be at least 3 characters long"],
+      required: true,
+      trim: true,
+      select: false,
+      minLength: [5, "Password must be at least 5 characters long"],
+    },
+    socketId: {
+      type: String,
     },
   },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-    match: [
-      /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
-      "Please fill a valid email address",
-    ],
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-    select: false,
-    minLength: [5, "Password must be at least 5 characters long"],
-  },
-  socketId: {
-    type: String,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 // Generate the auth token for the user
 userSchema.methods.generateAuthToken = function () {
