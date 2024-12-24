@@ -80,7 +80,7 @@ module.exports.loginUser = async (req, res, next) => {
 
   // Set the token in the cookie
   res.cookie("token", token, {
-    expires: new Date(Date.now() + 86400000),
+    expires: new Date(Date.now() + 86400000), // 1 day
     secure: false, // set to true if your using https
     httpOnly: true,
   });
