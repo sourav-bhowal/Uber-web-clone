@@ -14,7 +14,7 @@ export default function UserLogin() {
   });
 
   // Function to handle form submission
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     // Prevent default form submission
     e.preventDefault();
     // Set the user data state
@@ -36,7 +36,7 @@ export default function UserLogin() {
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s"
           alt="uber"
         />
-
+        {/* Form */}
         <form onSubmit={handleFormSubmit}>
           <h3 className="text-lg font-medium mb-2">Enter your email</h3>
           <input
@@ -49,7 +49,6 @@ export default function UserLogin() {
           />
 
           <h3 className="text-lg font-medium mb-2">Enter Password</h3>
-
           <input
             className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
             required
@@ -73,7 +72,7 @@ export default function UserLogin() {
       <div>
         <Link
           to="/captain-login"
-          className="bg-[#10b461] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base"
+          className="bg-red-600 flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base"
         >
           Sign in as Captain
         </Link>
