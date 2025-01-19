@@ -10,15 +10,11 @@ export default function UserSignUp() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
-  // User data state object
-  // const [userData, setUserData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // User context object
-  const { user, setUser } = useContext(UserDataContext);
-
-  // Navigation object
-  const navigate = useNavigate();
+  const { setUser } = useContext(UserDataContext);
 
   // Function to handle form submission
   const handleFormSubmit = async (e) => {
@@ -35,24 +31,36 @@ export default function UserSignUp() {
       },
     };
 
+    // Set loading to true
+    setLoading(true);
+
     // Send a POST request to the server
     await axios
       .post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
       .then((response) => {
         // Set the user data in the context
         setUser(response.data.user);
+        // Set token to local storage
+        localStorage.setItem("token", response.data.token);
         // Navigate to the home page
         navigate("/home");
+        // Set loading to false
+        setLoading(false);
       })
       .catch((error) => {
         alert(`${error.response.data.message}`);
+        // Set loading to false
+        setLoading(false);
+      })
+      .finally(() => {
+        // Clear the input fields
+        setEmail("");
+        setPassword("");
+        setFirstName("");
+        setLastName("");
+        // Set loading to false
+        setLoading(false);
       });
-
-    // Clear the input fields
-    setEmail("");
-    setPassword("");
-    setFirstName("");
-    setLastName("");
   };
 
   // Return the page content
@@ -78,7 +86,7 @@ export default function UserSignUp() {
                 placeholder="First name"
                 value={firstName}
                 onChange={(e) => {
-                  setFirstName(e.target.value);
+                  setFirstName(e.target.value); // Set the first name state variable to the value of the input field
                 }}
               />
               <input
@@ -88,7 +96,7 @@ export default function UserSignUp() {
                 placeholder="Last name"
                 value={lastName}
                 onChange={(e) => {
-                  setLastName(e.target.value);
+                  setLastName(e.target.value); // Set the last name state variable to the value of the input field
                 }}
               />
             </div>
@@ -110,15 +118,18 @@ export default function UserSignUp() {
               className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value);
+                setPassword(e.target.value); // Set the password state variable to the value of the input field
               }}
               required
               type="password"
               placeholder="password"
             />
 
-            <button className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base">
-              Create account
+            <button
+              type="submit"
+              className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base"
+            >
+              {loading ? "Creating account..." : "Create account"}
             </button>
           </form>
           <p className="text-center">

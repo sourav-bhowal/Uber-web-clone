@@ -1,32 +1,58 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserDataContext } from "../context/UserContext";
+import axios from "axios";
 
 // User Login page component
 export default function UserLogin() {
   // State for email and password input fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // State for user data object
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
-  });
+  // Get the setUser function from the UserDataContext
+  const { setUser } = useContext(UserDataContext);
 
   // Function to handle form submission
   const handleFormSubmit = async (e) => {
     // Prevent default form submission
     e.preventDefault();
 
-    // Set the user data state
-    setUserData({
+    // Set loading to true
+    setLoading(true);
+
+    // Create a new user data object
+    const userData = {
       email: email,
       password: password,
-    });
-    
-    // Clear the input fields
-    setEmail("");
-    setPassword("");
+    };
+
+    // Send a POST request to the server
+    await axios
+      .post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
+      .then((response) => {
+        // Set the user data in the context
+        setUser(response.data.user);
+        // Set token to local storage
+        localStorage.setItem("token", response.data.token);
+        // Navigate to the home page
+        navigate("/home");
+        // Set loading to false
+        setLoading(false);
+      })
+      .catch((error) => {
+        alert(`${error.response.data.message}`);
+        // Set loading to false
+        setLoading(false);
+      })
+      .finally(() => {
+        // Clear the input fields
+        setEmail("");
+        setPassword("");
+        // Set loading to false
+        setLoading(false);
+      });
   };
 
   // Return the JSX for the User Login page
@@ -60,8 +86,11 @@ export default function UserLogin() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base">
-            Login
+          <button
+            type="submit"
+            className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base"
+          >
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="text-center">

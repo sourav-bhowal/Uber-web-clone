@@ -13,13 +13,11 @@ export default function UserContext({ children }) {
       lastName: "",
     },
   });
+
   // Return the UserDataContext.Provider component
   return (
-    <div>
-      {/* The UserDataContext.Provider component is used to provide the user data to the components that need it. The value prop is used to pass the user data to the components. */}
-      <UserDataContext.Provider value={{ user, setUser }}>
-        {children}
-      </UserDataContext.Provider>
-    </div>
+    <UserDataContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserDataContext.Provider>
   );
 }

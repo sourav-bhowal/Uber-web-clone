@@ -2,7 +2,7 @@ import homeImage from "../assets/get-started.png";
 import { Link } from "react-router-dom";
 
 // Get Started page component
-export default function getStarted() {
+export default function GetStarted() {
   return (
     <div
       className="h-screen w-full flex flex-col bg-cover bg-center"

@@ -1,5 +1,7 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { CaptainDataContext } from "../context/CaptainContext.jsx";
+import axios from "axios";
 
 // User Sign Up Page
 export default function CaptainSignUp() {
@@ -8,30 +10,71 @@ export default function CaptainSignUp() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [vehicle, setVehicle] = useState({
+    color: "",
+    capacity: 0,
+    vehicleType: "",
+    plateNumber: "",
+  });
 
-  // User data state object
-  const [captainData, setCaptainData] = useState({});
+  // Get the navigate function from react router
+  const navigate = useNavigate();
+
+  // Get the setCaptain function from the CaptainDataContext
+  const { setCaptain, setIsLoading, setError, isLoading, isError } =
+    useContext(CaptainDataContext);
 
   // Function to handle form submission
   const handleFormSubmit = async (e) => {
     // Prevent default form submission behavior
     e.preventDefault();
 
-    // Set the user data state
-    setCaptainData({
+    // Set loading to true
+    setIsLoading(true);
+
+    // Create a new captain data object
+    const captainData = {
       email: email,
       password: password,
       fullName: {
         firstName: firstName,
         lastName: lastName,
       },
-    });
+      vehicle: vehicle,
+    };
 
-    // Clear the input fields
-    setEmail("");
-    setPassword("");
-    setFirstName("");
-    setLastName("");
+
+    // Send a POST request to the server
+    await axios
+      .post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
+      .then((response) => {
+        // Set the captain data in the context
+        setCaptain(response.data.captain);
+        // Set token to local storage
+        localStorage.setItem("token-captain", response.data.token);
+        // Navigate to the home page
+        navigate("/captain-home");
+      })
+      .catch((error) => {
+        alert(`${error.response.data.message}`);
+      })
+      .finally(() => {
+        // Set loading to false
+        setIsLoading(false);
+        // Set error to null
+        setError(null);
+        // clear the form
+        setEmail("");
+        setPassword("");
+        setFirstName("");
+        setLastName("");
+        setVehicle({
+          color: "",
+          capacity: 0,
+          vehicleType: "",
+          plateNumber: "",
+        });
+      });
   };
 
   // Return the page content
@@ -96,8 +139,73 @@ export default function CaptainSignUp() {
               placeholder="password"
             />
 
+            <h3 className="text-lg font-medium mb-2">Enter Vehicle Details</h3>
+            <div className="grid grid-cols-2 gap-4 mb-7">
+              <label htmlFor="color" className="text-lg font-medium mb-2">
+                Color
+              </label>
+              <input
+                required
+                id="color"
+                className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
+                type="text"
+                placeholder="Color"
+                value={vehicle.color}
+                onChange={(e) => {
+                  setVehicle({ ...vehicle, color: e.target.value });
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-7">
+              <label htmlFor="capacity" className="text-lg font-medium mb-2">
+                Capacity
+              </label>
+              <input
+                required
+                id="capacity"
+                className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
+                type="text"
+                placeholder="Capacity"
+                value={vehicle.capacity}
+                onChange={(e) => {
+                  setVehicle({ ...vehicle, capacity: e.target.value });
+                }}
+              />
+              <label htmlFor="vehicleType" className="text-lg font-medium mb-2">
+                Vehicle Type
+              </label>
+              <select
+                required
+                id="vehicleType"
+                className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
+                value={vehicle.vehicleType}
+                onChange={(e) => {
+                  setVehicle({ ...vehicle, vehicleType: e.target.value });
+                }}
+              >
+                <option value="">Select Type</option>
+                <option value="car">Car</option>
+                <option value="motorcycle">Motorcycle</option>
+                <option value="auto">Auto</option>
+              </select>
+              <label htmlFor="plateNumber" className="text-lg font-medium mb-2">
+                Plate Number
+              </label>
+              <input
+                required
+                id="plateNumber"
+                className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
+                type="text"
+                placeholder="Plate Number"
+                value={vehicle.plateNumber}
+                onChange={(e) => {
+                  setVehicle({ ...vehicle, plateNumber: e.target.value });
+                }}
+              />
+            </div>
+
             <button className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base">
-              Create account
+              {isLoading ? "Loading..." : "Create account"}
             </button>
           </form>
           <p className="text-center">

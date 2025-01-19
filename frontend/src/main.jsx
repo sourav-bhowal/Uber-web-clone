@@ -1,7 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import UserContext from "./context/userContext.jsx";
+import UserContext from "./context/UserContext.jsx";
+import CaptainContext from "./context/CaptainContext.jsx";
 import "./index.css";
 import App from "./App.jsx";
 
@@ -9,11 +10,13 @@ import App from "./App.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     {/* Wrap in User Context to pass user value everywhere */}
-    <UserContext>
-      {/* Wrap App in browser routes */}
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </UserContext>
+    <CaptainContext>
+      <UserContext>
+        {/* Wrap in Browser Router to use react router */}
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </UserContext>
+    </CaptainContext>
   </StrictMode>
 );
