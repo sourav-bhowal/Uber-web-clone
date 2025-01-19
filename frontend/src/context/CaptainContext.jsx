@@ -12,20 +12,24 @@ export default function CaptainContext({ children }) {
   const [error, setError] = useState(null);
 
   // Function to update captain data
-  function updateCaptain(captainData) {
+  function setCaptainData(captainData) {
+    setIsLoading(true);
     setCaptain(captainData);
+    setIsLoading(false);
   }
 
   // Function to clear captain data
   function clearCaptain() {
+    setIsLoading(true);
     setCaptain(null);
+    setIsLoading(false);
   }
 
   // Value to pass to the context
   const value = {
     captain,
     setCaptain,
-    updateCaptain,
+    setCaptainData,
     clearCaptain,
     isLoading,
     setIsLoading,

@@ -16,7 +16,7 @@ export default function UserLogout() {
     })
     .then(() => {
       // clear local storage
-      localStorage.clear();
+      localStorage.removeItem("token");
       // navigate to home page
       navigate("/");
     })

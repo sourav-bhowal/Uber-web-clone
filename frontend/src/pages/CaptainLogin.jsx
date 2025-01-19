@@ -1,32 +1,51 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { CaptainDataContext } from "../context/CaptainContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // User Login page component
 export default function CaptainLogin() {
   // State for email and password input fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  // State for user data object
-  const [captainData, setCaptainData] = useState({
-    email: "",
-    password: "",
-  });
+  // Get the captain data context
+  const { setCaptainData, isLoading, error, setError, setIsLoading } =
+    useContext(CaptainDataContext);
 
   // Function to handle form submission
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     // Prevent default form submission
     e.preventDefault();
 
-    // Set the user data state
-    setCaptainData({
+    // Create a new user data object
+    const captainData = {
       email: email,
       password: password,
-    });
-    
-    // Clear the input fields
-    setEmail("");
-    setPassword("");
+    };
+
+    // Set loading to true
+    setIsLoading(true);
+
+    // Send a POST request to the server
+    await axios
+      .post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captainData)
+      .then((response) => {
+        setCaptainData(response.data.captain); // Set the captain data in the context
+        localStorage.setItem("token-captain", response.data.token); // Set token to local storage
+        navigate("/captain-home"); // Navigate to the captain home page
+      })
+      .catch((error) => {
+        alert(`${error.response.data.message}`);
+        setError(error.response.data.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+        setEmail("");
+        setPassword("");
+      });
   };
 
   // Return the JSX for the User Login page
@@ -61,7 +80,7 @@ export default function CaptainLogin() {
           />
 
           <button className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base">
-            Login
+            {isLoading ? "Loading..." : "Login"}
           </button>
         </form>
         <p className="text-center">

@@ -12,7 +12,7 @@ export default function CaptainProtectedWrapper({ children }) {
       navigate("/captain-login");
     }
   }, [navigate]); // This effect runs when the component mounts
-
+  
   return <>{children}</>;
 }
 
