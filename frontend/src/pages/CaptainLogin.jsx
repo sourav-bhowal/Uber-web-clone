@@ -17,11 +17,13 @@ export default function CaptainLogin() {
   const handleFormSubmit = (e) => {
     // Prevent default form submission
     e.preventDefault();
+
     // Set the user data state
     setCaptainData({
       email: email,
       password: password,
     });
+    
     // Clear the input fields
     setEmail("");
     setPassword("");

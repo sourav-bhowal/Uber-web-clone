@@ -1,5 +1,7 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserDataContext } from "../context/UserContext";
 
 // User Sign Up Page
 export default function UserSignUp() {
@@ -10,22 +12,41 @@ export default function UserSignUp() {
   const [lastName, setLastName] = useState("");
 
   // User data state object
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
+
+  // User context object
+  const { user, setUser } = useContext(UserDataContext);
+
+  // Navigation object
+  const navigate = useNavigate();
 
   // Function to handle form submission
   const handleFormSubmit = async (e) => {
     // Prevent default form submission behavior
     e.preventDefault();
 
-    // Set the user data state
-    setUserData({
-      email: email,
-      password: password,
+    // Create a new user object
+    const newUser = {
+      email,
+      password,
       fullName: {
-        firstName: firstName,
-        lastName: lastName,
+        firstName,
+        lastName,
       },
-    });
+    };
+
+    // Send a POST request to the server
+    await axios
+      .post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
+      .then((response) => {
+        // Set the user data in the context
+        setUser(response.data.user);
+        // Navigate to the home page
+        navigate("/home");
+      })
+      .catch((error) => {
+        alert(`${error.response.data.message}`);
+      });
 
     // Clear the input fields
     setEmail("");

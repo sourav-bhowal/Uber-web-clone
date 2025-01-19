@@ -17,11 +17,13 @@ export default function UserLogin() {
   const handleFormSubmit = async (e) => {
     // Prevent default form submission
     e.preventDefault();
+
     // Set the user data state
     setUserData({
       email: email,
       password: password,
     });
+    
     // Clear the input fields
     setEmail("");
     setPassword("");
