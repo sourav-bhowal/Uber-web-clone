@@ -12,7 +12,7 @@ export default function CaptainLogin() {
   const navigate = useNavigate();
 
   // Get the captain data context
-  const { setCaptainData, isLoading, error, setError, setIsLoading } =
+  const { setCaptain, isLoading, error, setError, setIsLoading } =
     useContext(CaptainDataContext);
 
   // Function to handle form submission
@@ -33,7 +33,7 @@ export default function CaptainLogin() {
     await axios
       .post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captainData)
       .then((response) => {
-        setCaptainData(response.data.captain); // Set the captain data in the context
+        setCaptain(response.data.captain); // Set the captain data in the context
         localStorage.setItem("token-captain", response.data.token); // Set token to local storage
         navigate("/captain-home"); // Navigate to the captain home page
       })

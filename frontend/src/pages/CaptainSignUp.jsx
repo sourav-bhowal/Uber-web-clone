@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CaptainDataContext } from "../context/CaptainContext.jsx";
 import axios from "axios";
+import { ArrowRightIcon } from "lucide-react";
 
 // User Sign Up Page
 export default function CaptainSignUp() {
@@ -21,7 +22,7 @@ export default function CaptainSignUp() {
   const navigate = useNavigate();
 
   // Get the setCaptain function from the CaptainDataContext
-  const { setCaptain, setIsLoading, setError, isLoading, isError } =
+  const { setCaptain, setIsLoading, isLoading } =
     useContext(CaptainDataContext);
 
   // Function to handle form submission
@@ -43,7 +44,6 @@ export default function CaptainSignUp() {
       vehicle: vehicle,
     };
 
-
     // Send a POST request to the server
     await axios
       .post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
@@ -61,8 +61,6 @@ export default function CaptainSignUp() {
       .finally(() => {
         // Set loading to false
         setIsLoading(false);
-        // Set error to null
-        setError(null);
         // clear the form
         setEmail("");
         setPassword("");
@@ -83,10 +81,11 @@ export default function CaptainSignUp() {
       <div className="p-7 h-screen flex flex-col justify-between">
         <div>
           <img
-            className="w-16 mb-10"
+            className="w-16"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s"
             alt=""
           />
+          <ArrowRightIcon size={30} className="mb-2" />
 
           <form onSubmit={handleFormSubmit}>
             <h3 className="text-lg w-1/2  font-medium mb-2">
