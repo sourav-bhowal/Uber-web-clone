@@ -27,8 +27,6 @@ export default function CaptainContext({ children }) {
 
   // Value to pass to the context
   const value = {
-    captain,
-    setCaptain,
     setCaptainData,
     clearCaptain,
     isLoading,

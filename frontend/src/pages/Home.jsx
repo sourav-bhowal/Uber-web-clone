@@ -2,6 +2,10 @@ import { useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import Location from "../components/Location";
+import ChooseRides from "../components/ChooseRides";
+import SelectedRide from "../components/SelectedRide";
+import SearchingDrivers from "../components/SearchingDrivers";
+import WaitingForDriver from "../components/WaitingForDriver";
 
 // Home page
 export default function Home() {
@@ -9,11 +13,19 @@ export default function Home() {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
   const [showPanel, setShowPanel] = useState(false);
+  const [vehiclePanel, setVehiclePanel] = useState(false);
+  const [selectedRidePanel, setSelectedRidePanel] = useState(false);
+  const [searchingDriversPanel, setSearchingDriversPanel] = useState(false);
+  const [waitingForDriverPanel, setWaitingForDriverPanel] = useState(false);
 
-  // refs
+  // refs for location and vehicle panel
   const panelRef = useRef(null);
+  const vehiclePanelRef = useRef(null);
+  const selectedRideRef = useRef(null);
+  const searchingDriversRef = useRef(null);
+  const waitingForDriverRef = useRef(null);
 
-  // gsap
+  // gsap for location panel
   useGSAP(
     function () {
       if (showPanel) {
@@ -31,14 +43,87 @@ export default function Home() {
     [showPanel] // dependency array for gsap
   );
 
+  // gsap for vehicle panel
+  useGSAP(
+    function () {
+      if (vehiclePanel) {
+        gsap.to(vehiclePanelRef.current, {
+          transform: "translateY(0)",
+          duration: 0.5,
+        });
+      } else {
+        gsap.to(vehiclePanelRef.current, {
+          transform: "translateY(100%)",
+          duration: 0.5,
+        });
+      }
+    },
+    [vehiclePanel] // dependency array for gsap
+  );
+
+  // gsap for selected ride
+  useGSAP(
+    function () {
+      if (selectedRidePanel) {
+        gsap.to(selectedRideRef.current, {
+          transform: "translateY(0)",
+          duration: 0.5,
+        });
+      } else {
+        gsap.to(selectedRideRef.current, {
+          transform: "translateY(100%)",
+          duration: 0.5,
+        });
+      }
+    },
+    [selectedRidePanel] // dependency array for gsap
+  );
+
+  // gsap for waiting for driver
+  useGSAP(
+    function () {
+      if (waitingForDriverPanel) {
+        gsap.to(waitingForDriverRef.current, {
+          transform: "translateY(0)",
+          duration: 0.5,
+        });
+      } else {
+        gsap.to(waitingForDriverRef.current, {
+          transform: "translateY(100%)",
+          duration: 0.5,
+        });
+      }
+    },
+    [waitingForDriverPanel] // dependency array for gsap
+  );
+
+  // gsap for searching drivers
+  useGSAP(
+    function () {
+      if (searchingDriversPanel) {
+        gsap.to(searchingDriversRef.current, {
+          transform: "translateY(0)",
+          duration: 0.5,
+        });
+      } else {
+        gsap.to(searchingDriversRef.current, {
+          transform: "translateY(100%)",
+          duration: 0.5,
+        });
+      }
+    },
+    [searchingDriversPanel] // dependency array for gsap
+  );
+
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("submitted");
   };
 
+  // return the home page
   return (
-    <div className="relative h-screen">
+    <div className="relative h-screen overflow-hidden">
       <h2 className="text-3xl font-bold absolute top-5 left-5">Uber</h2>
       <div className="h-screen w-screen">
         <img
@@ -46,7 +131,7 @@ export default function Home() {
           src="https://simonpan.com/wp-content/themes/sp_portfolio/assets/uber-suboptimal.jpg"
         />
       </div>
-      <div className="absolute flex justify-end flex-col w-full top-0 h-screen">
+      <div className="absolute flex justify-end flex-col w-full top-20 h-screen">
         <div className="h-[30%] p-5 bg-white relative">
           <div className="flex justify-between">
             <h3 className="text-2xl font-semibold">Find a trip</h3>
@@ -92,13 +177,35 @@ export default function Home() {
             />
           </form>
         </div>
-        <div
-          ref={panelRef} // ref for gsap
-          className="h-0 bg-white px-14"
-        >
-          <Location />
-        </div>
+        <Location
+          setShowPanel={setShowPanel}
+          setVehiclePanel={setVehiclePanel}
+          panelRef={panelRef}
+        />
       </div>
+      <ChooseRides
+        vehiclePanelRef={vehiclePanelRef}
+        setShowPanel={setShowPanel}
+        setVehiclePanel={setVehiclePanel}
+        setSelectedRidePanel={setSelectedRidePanel}
+      />
+      <SelectedRide
+        selectedRideRef={selectedRideRef}
+        setSelectedRidePanel={setSelectedRidePanel}
+        setVehiclePanel={setVehiclePanel}
+        setSearchingDriversPanel={setSearchingDriversPanel}
+      />
+      <SearchingDrivers
+        searchingDriversRef={searchingDriversRef}
+        setSearchingDriversPanel={setSearchingDriversPanel}
+        setSelectedRidePanel={setSelectedRidePanel}
+        setWaitingForDriverPanel={setWaitingForDriverPanel}
+      />
+      <WaitingForDriver
+        waitingForDriverRef={waitingForDriverRef}
+        setWaitingForDriverPanel={setWaitingForDriverPanel}
+        setSearchingDriversPanel={setSearchingDriversPanel}
+      />
     </div>
   );
 }

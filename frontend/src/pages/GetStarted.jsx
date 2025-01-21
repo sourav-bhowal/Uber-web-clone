@@ -1,8 +1,12 @@
 import homeImage from "../assets/get-started.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 // Get Started page component
 export default function GetStarted() {
+  const token = localStorage.getItem("token");
+  if (token) {
+    return <Navigate to="/home" />;
+  }
   return (
     <div
       className="h-screen w-full flex flex-col bg-cover bg-center"
