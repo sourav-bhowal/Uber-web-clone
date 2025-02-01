@@ -5,7 +5,6 @@ import { CaptainDataContext } from "../context/CaptainContext";
 const CaptainDetails = () => {
   // Get the captain data from the CaptainDataContext
   const { captain } = useContext(CaptainDataContext);
-  console.log(captain);
 
   // Return the captain details
   return (
@@ -18,7 +17,7 @@ const CaptainDetails = () => {
             alt=""
           />
           <h4 className="text-lg font-medium capitalize">
-            {captain.fullName.firstName + " " + captain.fullName.lastName}
+            {captain.fullName.firstName + " " + captain.fullName.lastName} 
           </h4>
         </div>
         <div>

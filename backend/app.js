@@ -6,6 +6,8 @@ const cors = require("cors");
 const connectDB = require("./lib/db");
 const userRoutes = require("./routes/user.routes")
 const captainRoutes = require("./routes/captain.routes")
+const mapRoutes = require("./routes/map.routes")
+const rideRoutes = require("./routes/ride.routes")
 
 // Create an express app
 const app = express();
@@ -30,6 +32,12 @@ app.use("/api/users", userRoutes);
 
 // Use the captain routes
 app.use("/api/captains", captainRoutes);
+
+// Use the map routes
+app.use("/api/maps", mapRoutes);
+
+// Use the ride routes
+app.use("/api/rides", rideRoutes);
 
 // Export the app object
 module.exports = app;

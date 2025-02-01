@@ -6,17 +6,23 @@ import ChooseRides from "../components/ChooseRides";
 import SelectedRide from "../components/SelectedRide";
 import SearchingDrivers from "../components/SearchingDrivers";
 import WaitingForDriver from "../components/WaitingForDriver";
+import axios from "axios";
 
 // Home page
 export default function Home() {
   // states
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
+  const [pickUpSuggestions, setPickUpSuggestions] = useState([]);
+  const [dropOffSuggestions, setDropOffSuggestions] = useState([]);
   const [showPanel, setShowPanel] = useState(false);
   const [vehiclePanel, setVehiclePanel] = useState(false);
   const [selectedRidePanel, setSelectedRidePanel] = useState(false);
   const [searchingDriversPanel, setSearchingDriversPanel] = useState(false);
   const [waitingForDriverPanel, setWaitingForDriverPanel] = useState(false);
+  const [fare, setFare] = useState({});
+  const [activeField, setActiveField] = useState(null);
+  const [vehicleType, setVehicleType] = useState(null);
 
   // refs for location and vehicle panel
   const panelRef = useRef(null);
@@ -115,11 +121,98 @@ export default function Home() {
     [searchingDriversPanel] // dependency array for gsap
   );
 
-  // handle submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("submitted");
+  // Handle pickup location
+  const handlePickupLocationChange = async (e) => {
+    setPickup(e.target.value);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/maps/get-autocomplete-suggestions`,
+        {
+          params: { input: e.target.value },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setPickUpSuggestions(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  // Handle dropoff location change
+  const handleDropoffLocationChange = async (e) => {
+    // set dropoff location
+    setDropoff(e.target.value);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/maps/get-autocomplete-suggestions`,
+        {
+          params: { input: e.target.value },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setDropOffSuggestions(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Handle find trip fn
+  async function handleFindTrip(e) {
+    // prevent default form submission
+    e.preventDefault();
+    // set vector panel to true
+    setVehiclePanel(true);
+    // set show panel to false
+    setShowPanel(false);
+
+    // get fare from the backend
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
+        {
+          params: { pickup, destination: dropoff },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      // set fare state
+      setFare(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Handle create ride fn
+  async function handleCreateRide() {
+    // set selected ride panel to false
+    setSelectedRidePanel(false);
+    // create ride
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/create-ride`,
+        {
+          pickup,
+          destination: dropoff,
+          vehicleType,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(response.data);
+      // set seraching drivers panel to true
+      setSearchingDriversPanel(true);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   // return the home page
   return (
@@ -132,7 +225,7 @@ export default function Home() {
         />
       </div>
       <div className="absolute flex justify-end flex-col w-full top-20 h-screen">
-        <div className="h-[30%] p-5 bg-white relative">
+        <div className="h-[33%] p-5 bg-white relative">
           <div className="flex justify-between">
             <h3 className="text-2xl font-semibold">Find a trip</h3>
             {showPanel && (
@@ -157,45 +250,73 @@ export default function Home() {
               </button>
             )}
           </div>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-            <div className="line absolute h-16 w-1 left-10 top-1/3 bg-gray-700 rounded-full"></div>
+          <form onSubmit={handleFindTrip} className="flex flex-col gap-2">
+            <div className="line absolute h-16 w-1 left-10 top-[30%] bg-gray-700 rounded-full"></div>
             <input
               className="bg-[#eee] px-12 py-4 rounded-lg w-full mt-3"
               type="text"
               placeholder="Add your pickup location"
               value={pickup}
-              onChange={(e) => setPickup(e.target.value)}
-              onClick={() => setShowPanel(true)}
+              onChange={handlePickupLocationChange}
+              onClick={() => {
+                setShowPanel(true);
+                setActiveField("pickup");
+              }}
             />
             <input
               className="bg-[#eee] px-12 py-4 rounded-lg w-full"
               type="text"
               placeholder="Add your dropoff location"
               value={dropoff}
-              onChange={(e) => setDropoff(e.target.value)}
-              onClick={() => setShowPanel(true)}
+              onChange={handleDropoffLocationChange}
+              onClick={() => {
+                setShowPanel(true);
+                setActiveField("dropoff");
+              }}
             />
+            <button
+              type="submit"
+              className="
+            bg-black text-white p-3 rounded-lg mt-3 font-semibold text-xl
+            hover:bg-gray-800
+            transition duration-200 ease-in-out w-full"
+            >
+              Find Rides
+            </button>
           </form>
         </div>
         <Location
-          setShowPanel={setShowPanel}
-          setVehiclePanel={setVehiclePanel}
           panelRef={panelRef}
+          setPickup={setPickup}
+          setDropoff={setDropoff}
+          activeField={activeField}
+          suggestions={
+            activeField === "pickup" ? pickUpSuggestions : dropOffSuggestions // conditional rendering of suggestions based on active field
+          }
         />
       </div>
       <ChooseRides
+        fare={fare}
+        setVehicleType={setVehicleType}
         vehiclePanelRef={vehiclePanelRef}
-        setShowPanel={setShowPanel}
         setVehiclePanel={setVehiclePanel}
         setSelectedRidePanel={setSelectedRidePanel}
       />
       <SelectedRide
+        vehicleType={vehicleType}
+        fare={fare}
+        pickup={pickup}
+        dropoff={dropoff}
+        createRide={handleCreateRide}
         selectedRideRef={selectedRideRef}
         setSelectedRidePanel={setSelectedRidePanel}
         setVehiclePanel={setVehiclePanel}
-        setSearchingDriversPanel={setSearchingDriversPanel}
       />
       <SearchingDrivers
+        pickup={pickup}
+        dropoff={dropoff}
+        fare={fare}
+        vehicleType={vehicleType}
         searchingDriversRef={searchingDriversRef}
         setSearchingDriversPanel={setSearchingDriversPanel}
         setSelectedRidePanel={setSelectedRidePanel}

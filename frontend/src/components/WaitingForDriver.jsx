@@ -49,28 +49,28 @@ export default function WaitingForDriver({
       <div className="w-full flex flex-col gap-3 mt-6 px-4">
         <div className="flex items-center gap-2">
           <MapPinIcon size={20} />
-          <p>
+          <div>
             <h3 className="text-lg font-semibold">562/22-C</h3>
             <h4 className="text-sm text-gray-500">Kolkata, West Bengal</h4>
-          </p>
+          </div>
         </div>
         <div className="w-[88%] h-[1px] bg-gray-300 mx-auto" />
         <div className="flex items-center gap-2">
           <LocateIcon size={20} />
-          <p>
+          <div>
             <h3 className="text-lg font-semibold">Second Street</h3>
             <h4 className="text-sm text-gray-500">
               1st Sector, Hari Nagar, New Delhi, Delhi 110014
             </h4>
-          </p>
+          </div>
         </div>
         <div className="w-[88%] h-[1px] bg-gray-300 mx-auto" />
         <div className="flex items-center gap-2">
           <CreditCardIcon size={20} />
-          <p>
+          <div>
             <h3 className="text-lg font-semibold">₹100</h3>
             <h4 className="text-sm text-gray-500">Cash</h4>
-          </p>
+          </div>
         </div>
       </div>
       <button

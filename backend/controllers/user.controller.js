@@ -83,12 +83,12 @@ module.exports.loginUser = async (req, res, next) => {
     expires: new Date(Date.now() + 86400000), // 1 day
     secure: false, // set to true if your using https
     httpOnly: true,
+    sameSite: "none", // set to lax if your using https
   });
 
   // Send the response
   res.status(200).json({
     message: "User logged in successfully",
-    user,
     token,
   });
 };

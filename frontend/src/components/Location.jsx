@@ -1,37 +1,37 @@
 import PropTypes from "prop-types";
 
-// locations array
-const locations = [
-  {
-    address: "123 Main St. Park Street, Near KFC, New York, USA",
-  },
-  {
-    address: "456 Main St. Park Street, Near McDonalds, New York, USA",
-  },
-  {
-    address: "789 Main St. Park Street, Near Burger King, New York, USA",
-  },
-];
-
 // Location.propTypes is a prop type for the Location component
 Location.propTypes = {
-  setShowPanel: PropTypes.func.isRequired,
-  setVehiclePanel: PropTypes.func.isRequired,
   panelRef: PropTypes.object,
+  suggestions: PropTypes.array,
+  activeField: PropTypes.string,
+  setPickup: PropTypes.func.isRequired,
+  setDropoff: PropTypes.func.isRequired,
 };
 
 // Location is a component that displays the available locations and allows the user to choose a location
-export default function Location({ setShowPanel, setVehiclePanel, panelRef }) {
+export default function Location({
+  panelRef,
+  suggestions,
+  activeField,
+  setPickup,
+  setDropoff,
+}) {
+  // Hnadles the suggestion click
+  const handleSuggestionClick = (suggestion) => {
+    if (activeField === "pickup") {
+      setPickup(suggestion);
+    } else if (activeField === "dropoff") {
+      setDropoff(suggestion);
+    }
+  };
   return (
     <div className="flex flex-col gap-2 h-0 bg-white p-5" ref={panelRef}>
-      {locations.map((location, index) => (
+      {suggestions.map((location, index) => (
         <div
           className="flex items-center gap-4 my-4 justify-start bg-gray-100 p-3 rounded-xl border-2"
           key={index}
-          onClick={() => {
-            setShowPanel(false);
-            setVehiclePanel(true);
-          }}
+          onClick={() => handleSuggestionClick(location)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ export default function Location({ setShowPanel, setVehiclePanel, panelRef }) {
               d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
             />
           </svg>
-          <p className="font-medium">{location.address}</p>
+          <p className="font-medium">{location}</p>
         </div>
       ))}
     </div>

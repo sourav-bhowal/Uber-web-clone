@@ -16,8 +16,6 @@ module.exports.registerCaptain = async (req, res, next) => {
   // Deconstruct the request body
   const { email, password, fullName, vehicle } = req.body;
 
-  console.log(req.body);
-
   // Find the captain by email to check if captain already exists
   const existingCaptain = await captainModel.findOne({ email });
 
