@@ -9,11 +9,11 @@ export default function CaptainLogin() {
   // State for email and password input fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   // Get the captain data context
-  const { setCaptain, isLoading, error, setError, setIsLoading } =
-    useContext(CaptainDataContext);
+  const { setCaptain } = useContext(CaptainDataContext);
 
   // Function to handle form submission
   const handleFormSubmit = async (e) => {
@@ -39,7 +39,6 @@ export default function CaptainLogin() {
       })
       .catch((error) => {
         alert(`${error.response.data.message}`);
-        setError(error.response.data.message);
       })
       .finally(() => {
         setIsLoading(false);

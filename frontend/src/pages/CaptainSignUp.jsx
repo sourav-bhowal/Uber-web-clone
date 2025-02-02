@@ -11,6 +11,7 @@ export default function CaptainSignUp() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [vehicle, setVehicle] = useState({
     color: "",
     capacity: 0,
@@ -22,8 +23,7 @@ export default function CaptainSignUp() {
   const navigate = useNavigate();
 
   // Get the setCaptain function from the CaptainDataContext
-  const { setCaptain, setIsLoading, isLoading } =
-    useContext(CaptainDataContext);
+  const { setCaptain } = useContext(CaptainDataContext);
 
   // Function to handle form submission
   const handleFormSubmit = async (e) => {

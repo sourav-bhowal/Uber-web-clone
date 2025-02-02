@@ -17,7 +17,8 @@ const CaptainDetails = () => {
             alt=""
           />
           <h4 className="text-lg font-medium capitalize">
-            {captain.fullName.firstName + " " + captain.fullName.lastName} 
+            {captain &&
+              `${captain?.fullName?.firstName} ${captain?.fullName?.lastName}`}
           </h4>
         </div>
         <div>
