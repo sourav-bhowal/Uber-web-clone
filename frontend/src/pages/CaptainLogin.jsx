@@ -1,8 +1,7 @@
 import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
 import { CaptainDataContext } from "../context/CaptainContext";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 
 // User Login page component
 export default function CaptainLogin() {
@@ -14,6 +13,11 @@ export default function CaptainLogin() {
 
   // Get the captain data context
   const { setCaptain } = useContext(CaptainDataContext);
+
+  // Check if the captain is already logged in
+  if (localStorage.getItem("token-captain")) {
+    return <Navigate to="/captain-home" />;
+  }
 
   // Function to handle form submission
   const handleFormSubmit = async (e) => {
@@ -35,6 +39,7 @@ export default function CaptainLogin() {
       .then((response) => {
         setCaptain(response.data.captain); // Set the captain data in the context
         localStorage.setItem("token-captain", response.data.token); // Set token to local storage
+        document.cookie = `token-captain=${response.data.token}; path=/; max-age=86400`; // Set token to cookie
         navigate("/captain-home"); // Navigate to the captain home page
       })
       .catch((error) => {

@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 
+import { LocateFixed, MapPin } from "lucide-react";
+
 const RidePopUp = (props) => {
   return (
     <div>
@@ -20,9 +22,9 @@ const RidePopUp = (props) => {
             alt=""
           />
           <h2 className="text-lg font-medium">
-            {props.ride?.user.fullname.firstname +
+            {props?.ride?.userId.fullName.firstName +
               " " +
-              props.ride?.user.fullname.lastname}
+              props?.ride?.userId.fullName.lastName}
           </h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>
@@ -32,8 +34,11 @@ const RidePopUp = (props) => {
           <div className="flex items-center gap-5 p-3 border-b-2">
             <i className="ri-map-pin-user-fill"></i>
             <div>
-              <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">
+              <h3 className="text-lg font-medium flex items-center gap-1">
+                <MapPin size={20} />
+                Pickup
+              </h3>
+              <p className="text-sm mt-1 text-gray-600">
                 {props.ride?.pickup}
               </p>
             </div>
@@ -41,8 +46,10 @@ const RidePopUp = (props) => {
           <div className="flex items-center gap-5 p-3 border-b-2">
             <i className="text-lg ri-map-pin-2-fill"></i>
             <div>
-              <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">
+              <h3 className="text-lg font-medium flex items-center gap-1">
+              <LocateFixed size={20} />
+              Dropoff</h3>
+              <p className="text-sm mt-1 text-gray-600">
                 {props.ride?.destination}
               </p>
             </div>
@@ -51,7 +58,7 @@ const RidePopUp = (props) => {
             <i className="ri-currency-line"></i>
             <div>
               <h3 className="text-lg font-medium">₹{props.ride?.fare} </h3>
-              <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
+              <p className="text-sm mt-1 text-gray-600">Cash</p>
             </div>
           </div>
         </div>

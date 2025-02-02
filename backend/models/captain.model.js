@@ -43,12 +43,8 @@ const captainSchema = mongoose.Schema(
       default: "offline",
     },
     location: {
-      lat: {
-        type: Number,
-      },
-      long: {
-        type: Number,
-      },
+      type: { type: String, enum: ["Point"], required: true },
+      coordinates: { type: [Number], required: true }, // [longitude, latitude]
     },
     vehicle: {
       color: {
@@ -79,6 +75,9 @@ const captainSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Index the location field for faster geospatial queries
+captainSchema.index({ location: "2dsphere" });
 
 // Generate the auth token for the captain
 captainSchema.methods.generateAuthToken = function () {

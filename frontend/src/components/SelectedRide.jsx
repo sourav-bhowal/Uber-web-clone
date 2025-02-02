@@ -10,7 +10,7 @@ SelectedRide.propTypes = {
   selectedRideRef: PropTypes.object,
   setVehiclePanel: PropTypes.func.isRequired,
   setSelectedRidePanel: PropTypes.func.isRequired,
-  vehicleType: PropTypes.string.isRequired,
+  vehicleType: PropTypes.string,
 };
 
 // SelectedRide is a component that displays the selected ride

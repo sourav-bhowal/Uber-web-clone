@@ -33,5 +33,13 @@ rideRouter.get(
   rideController.getFare
 );
 
+// Confirm the ride
+rideRouter.post(
+  "/confirm-ride",
+  [body("rideId").isString().notEmpty().isLength({ min: 1 })],
+  authMiddleware.authCaptain,
+  rideController.confirmRide
+);
+
 // Export the map router
 module.exports = rideRouter;

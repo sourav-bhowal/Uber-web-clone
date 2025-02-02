@@ -1,6 +1,7 @@
 const mapService = require("./map.service");
 const rideModel = require("../models/ride.model");
 const crypto = require("crypto");
+const captainModel = require("../models/captain.model");
 
 // Get the fare for each vehicle type function
 module.exports.getRideFare = async (pickup, destination) => {
@@ -89,6 +90,73 @@ module.exports.bookRide = async ({
     otp: this.generateOTP(), // Generate an OTP for the ride
     fare: fare[vehicleType], // Use the fare for the selected vehicle type
   });
+
+  return ride;
+};
+
+// Function to get the captains in a given radius
+module.exports.getCaptainsInTheRadius = async (
+  ltd,
+  lng,
+  radius,
+  vehicleType
+) => {
+  // radius in km
+
+  // Check if the latitude, longitude, and radius are provided
+  if (!ltd || !lng || !radius || !vehicleType) {
+    throw new Error("Latitude, longitude, and radius are required");
+  }
+
+  // Get the captain model
+  const captains = await captainModel.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: [lng, ltd],
+        },
+        distanceField: "distance",
+        maxDistance: radius * 1000, // Convert radius to meters
+        spherical: true,
+        key: "location",
+      },
+    },
+  ]);
+
+  return captains;
+};
+
+// Function to confirm the ride
+module.exports.confirmRide = async ({ rideId, captain }) => {
+  if (!rideId) {
+    throw new Error("Ride id is required");
+  }
+
+  // Find the ride with the given ride id and update the status to accepted
+  await rideModel.findOneAndUpdate(
+    {
+      _id: rideId,
+    },
+    {
+      status: "accepted",
+      captain: captain._id,
+    }
+  );
+
+  // Find the ride with the given ride id and populate the user and captain fields
+  const ride = await rideModel
+    .findOne({
+      _id: rideId,
+    })
+    .populate("user")
+    .populate("captain")
+    .select("+otp");
+
+  // Check if the ride is not found
+  if (!ride) {
+    throw new Error("Ride not found");
+  }
 
   return ride;
 };

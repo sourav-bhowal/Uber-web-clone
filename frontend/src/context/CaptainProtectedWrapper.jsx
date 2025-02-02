@@ -16,6 +16,7 @@ export default function CaptainProtectedWrapper({ children }) {
       navigate("/captain-login");
     }
 
+    // Get the captain profile
     axios
       .get(`${import.meta.env.VITE_BASE_URL}/captains/profile`, {
         headers: {

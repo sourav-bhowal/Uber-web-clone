@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import Location from "../components/Location";
@@ -6,11 +6,14 @@ import ChooseRides from "../components/ChooseRides";
 import SelectedRide from "../components/SelectedRide";
 import SearchingDrivers from "../components/SearchingDrivers";
 import WaitingForDriver from "../components/WaitingForDriver";
+import { SocketContext } from "../context/SocketContext";
+import { UserDataContext } from "../context/UserContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // Home page
 export default function Home() {
-  // states
+  // States
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
   const [pickUpSuggestions, setPickUpSuggestions] = useState([]);
@@ -23,13 +26,21 @@ export default function Home() {
   const [fare, setFare] = useState({});
   const [activeField, setActiveField] = useState(null);
   const [vehicleType, setVehicleType] = useState(null);
+  const [ride, setRide] = useState(null);
 
-  // refs for location and vehicle panel
+  // Refs for location and vehicle panel
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
   const selectedRideRef = useRef(null);
   const searchingDriversRef = useRef(null);
   const waitingForDriverRef = useRef(null);
+
+  // Use navigate hook
+  const navigate = useNavigate();
+
+  // Use Socket Context and User Context
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(UserDataContext);
 
   // gsap for location panel
   useGSAP(
@@ -120,6 +131,29 @@ export default function Home() {
     },
     [searchingDriversPanel] // dependency array for gsap
   );
+
+  // Handle socket message using useEffect
+  useEffect(() => {
+    // if no user id return
+    if (!user?._id) return;
+
+    // emit "join" event for user
+    socket.emit("join", { userType: "user", userId: user?._id });
+  }, [socket, user?._id]);
+
+  // Socket events for ride confirmed
+  socket.on("ride-confirmed", (data) => {
+    setVehiclePanel(false);
+    setWaitingForDriverPanel(true);
+    setRide(data);
+  });
+
+  // Socket events for ride started
+  socket.on("ride-started", (data) => {
+    console.log("ride");
+    setWaitingForDriverPanel(false);
+    navigate("/riding", { state: { data } }); // Updated navigate to include ride data
+  });
 
   // Handle pickup location
   const handlePickupLocationChange = async (e) => {
@@ -323,6 +357,7 @@ export default function Home() {
         setWaitingForDriverPanel={setWaitingForDriverPanel}
       />
       <WaitingForDriver
+        ride={ride}
         waitingForDriverRef={waitingForDriverRef}
         setWaitingForDriverPanel={setWaitingForDriverPanel}
         setSearchingDriversPanel={setSearchingDriversPanel}

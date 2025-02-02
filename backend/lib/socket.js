@@ -25,6 +25,8 @@ function initializeSocket(server) {
       // Get the user ID and user type from the data
       const { userId, userType } = data;
 
+      console.log(`User ${userId} joined as ${userType}`);
+
       // Update the socket ID for the user or captain
       if (userType === "user") {
         await userModel.findByIdAndUpdate(userId, { socketId: socket.id });
@@ -39,15 +41,15 @@ function initializeSocket(server) {
       const { userId, location } = data;
 
       // Check if the location data is valid
-      if (!location || !location.latitude || !location.longitude) {
+      if (!location || !location.ltd || !location.lng) {
         return socket.emit("error", { message: "Invalid location data" });
       }
 
       // Update the location for the captain
       await captainModel.findByIdAndUpdate(userId, {
         location: {
-          ltd: location.latitude,
-          lng: location.longitude,
+          type: "Point",
+          coordinates: [location.lng, location.ltd],
         },
       });
     });

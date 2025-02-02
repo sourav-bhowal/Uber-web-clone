@@ -14,6 +14,8 @@ import Riding from "./pages/Riding";
 
 // App component is the root component of the application. It is the parent component of all other components. It is the first component that gets rendered when the application starts.
 export default function App() {
+
+  // Return the JSX for the App component
   return (
     <div>
       {/* Routes */}

@@ -36,6 +36,8 @@ export default function UserLogin() {
         setUser(response.data.user);
         // Set token to local storage
         localStorage.setItem("token", response.data.token);
+        // Set token to cookie
+        document.cookie = `token=${response.data.token}; path=/; max-age=86400`;
         // Navigate to the home page
         navigate("/home");
         // Set loading to false

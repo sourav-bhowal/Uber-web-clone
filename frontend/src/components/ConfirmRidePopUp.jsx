@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +18,7 @@ const ConfirmRidePopUp = (props) => {
           otp: otp,
         },
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token-captain")}`,
         },
       }
     );
@@ -51,7 +50,7 @@ const ConfirmRidePopUp = (props) => {
             alt=""
           />
           <h2 className="text-lg font-medium capitalize">
-            {props.ride?.user.fullname.firstname}
+            {props.ride?.userId.fullName.firstName}
           </h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>

@@ -15,8 +15,8 @@ module.exports.getAddressCoordinates = async (address) => {
     if (response.data.status === "OK") {
       const location = response.data.results[0].geometry.location;
       return {
-        latitude: location.lat,
-        longitude: location.lng,
+        ltd: location.lat,
+        lng: location.lng,
       };
     } else {
       throw new Error(`Geocoding error: ${response.data.status}`);
@@ -46,7 +46,6 @@ module.exports.getDistanceTime = async (origin, destination) => {
         distance: data.distance,
         duration: data.duration,
       };
-      
     } else {
       throw new Error(`Distance matrix error: ${response.data.status}`);
     }

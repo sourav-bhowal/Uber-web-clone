@@ -4,10 +4,10 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const connectDB = require("./lib/db");
-const userRoutes = require("./routes/user.routes")
-const captainRoutes = require("./routes/captain.routes")
-const mapRoutes = require("./routes/map.routes")
-const rideRoutes = require("./routes/ride.routes")
+const userRoutes = require("./routes/user.routes");
+const captainRoutes = require("./routes/captain.routes");
+const mapRoutes = require("./routes/map.routes");
+const rideRoutes = require("./routes/ride.routes");
 
 // Create an express app
 const app = express();
@@ -16,7 +16,11 @@ const app = express();
 connectDB();
 
 // Allow all CORS requests
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // Express middleware to parse the incoming requests with JSON payloads
 app.use(express.json());
