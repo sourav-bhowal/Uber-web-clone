@@ -10,7 +10,7 @@ import { SocketContext } from "../context/SocketContext";
 import { CaptainDataContext } from "../context/CaptainContext";
 import axios from "axios";
 import { HomeIcon } from "lucide-react";
-import React from "react";
+import LiveTracking from "../components/LiveTracking";
 
 // Captain Home Page
 const CaptainHome = () => {
@@ -76,14 +76,14 @@ const CaptainHome = () => {
     setRidePopupPanel(true);
   });
 
-  // Function to confirm a ride
+  // Function to confirm a ride 
   async function confirmRide() {
     if (!ride || !captain) return;
-    // 
-    const response = await axios.post(
-      `http://localhost:5000/api/rides/confirm-ride`,
+    // Send a POST request to the server to confirm the ride
+    await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/rides/confirm-ride`,
       {
-        rideId: (ride as any)?._id,
+        rideId: ride.rideDetails._id,
         captainId: captain?._id,
       },
       {
@@ -92,6 +92,7 @@ const CaptainHome = () => {
         },
       }
     );
+    // Hide the ride popup panel and show the confirm ride popup panel
     setRidePopupPanel(false);
     setConfirmRidePopupPanel(true);
   }
@@ -143,12 +144,8 @@ const CaptainHome = () => {
           <HomeIcon className="h-6 w-6" />
         </Link>
       </div>
-      <div className="h-3/5">
-        <img
-          className="h-full w-full object-cover"
-          src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
-          alt=""
-        />
+      <div className="h-4/5">
+        <LiveTracking />
       </div>
       <div className="h-2/5 p-6">
         <CaptainDetails />

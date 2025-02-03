@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { UserDataContext } from "../context/UserContext";
 import axios from "axios";
 
@@ -13,6 +13,11 @@ export default function UserLogin() {
 
   // Get the setUser function from the UserDataContext
   const { setUser } = useContext(UserDataContext);
+
+  // Check if the captain is already logged in
+  if (localStorage.getItem("token")) {
+    return <Navigate to="/home" />;
+  }
 
   // Function to handle form submission
   const handleFormSubmit = async (e) => {

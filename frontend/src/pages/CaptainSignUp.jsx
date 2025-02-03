@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { CaptainDataContext } from "../context/CaptainContext.jsx";
 import axios from "axios";
 import { ArrowRightIcon } from "lucide-react";
@@ -24,6 +24,11 @@ export default function CaptainSignUp() {
 
   // Get the setCaptain function from the CaptainDataContext
   const { setCaptain } = useContext(CaptainDataContext);
+
+  // Check if the captain is already logged in
+  if (localStorage.getItem("token-captain")) {
+    return <Navigate to="/captain-home" />;
+  }
 
   // Function to handle form submission
   const handleFormSubmit = async (e) => {

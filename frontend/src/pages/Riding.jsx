@@ -1,9 +1,23 @@
 import { CheckIcon, LocateIcon, CreditCardIcon, HomeIcon } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { SocketContext } from "../context/SocketContext";
+import LiveTracking from "../components/LiveTracking";
 
 // Riding Page
 export default function Riding() {
+  const location = useLocation();
+  // Retrieve ride data from location state
+  const { ride } = location.state || {}; // Retrieve ride data
+  const { socket } = useContext(SocketContext);
   const navigate = useNavigate();
+
+  // When the ride is ended, navigate to the home page
+  socket.on("ride-ended", () => {
+    navigate("/home");
+  });
+
+  // Return the Riding component
   return (
     <div className="h-screen">
       <HomeIcon
@@ -12,10 +26,7 @@ export default function Riding() {
         onClick={() => navigate("/home")}
       />
       <div className="h-1/2">
-        <img
-          className="h-full w-full object-cover"
-          src="https://simonpan.com/wp-content/themes/sp_portfolio/assets/uber-suboptimal.jpg"
-        />
+        <LiveTracking />
       </div>
       <div className="h-1/2 bg-white p-5 flex flex-col gap-10">
         <div className="flex justify-between items-center px-4">
@@ -28,10 +39,15 @@ export default function Riding() {
           />
           <div className="flex flex-col gap-2 items-end">
             <h2 className="text-lg font-semibold text-gray-500">
-              Rajesh Kumar
+              {ride?.captainId?.fullName.firstName}{" "}
+              {ride?.captainId?.fullName.lastName}
             </h2>
-            <h3 className="text-xl font-bold">AS-03-H545</h3>
-            <h4 className="text-sm text-gray-500">Red Acura MDX</h4>
+            <h3 className="text-xl font-bold">
+              {ride?.captainId?.vehicle.plateNumber}
+            </h3>
+            <h4 className="text-sm text-gray-500">
+              {ride?.captainId?.vehicle.color}
+            </h4>
             <h3 className="text-sm text-green-500 flex gap-2 font-semibold items-center">
               <CheckIcon size={20} />
               Verified
@@ -43,23 +59,21 @@ export default function Riding() {
           <div className="flex items-center gap-2">
             <LocateIcon size={20} />
             <div>
-              <h3 className="text-lg font-semibold">Second Street</h3>
-              <h4 className="text-sm text-gray-500">
-                1st Sector, Hari Nagar, New Delhi, Delhi 110014
-              </h4>
+              <h3 className="text-lg font-semibold">Destination</h3>
+              <h4 className="text-sm text-gray-500">{ride?.destination}</h4>
             </div>
           </div>
           <div className="w-[88%] h-[1px] bg-gray-300 mx-auto" />
           <div className="flex items-center gap-2">
             <CreditCardIcon size={20} />
             <div>
-              <h3 className="text-lg font-semibold">₹100</h3>
+              <h3 className="text-lg font-semibold">₹{ride?.fare}</h3>
               <h4 className="text-sm text-gray-500">Cash</h4>
             </div>
           </div>
         </div>
         <button className="bg-black text-white px-4 py-2 rounded-md w-full">
-          Mark a Payment
+          Reached Destination
         </button>
       </div>
     </div>

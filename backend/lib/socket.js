@@ -25,8 +25,6 @@ function initializeSocket(server) {
       // Get the user ID and user type from the data
       const { userId, userType } = data;
 
-      console.log(`User ${userId} joined as ${userType}`);
-
       // Update the socket ID for the user or captain
       if (userType === "user") {
         await userModel.findByIdAndUpdate(userId, { socketId: socket.id });
@@ -63,7 +61,6 @@ function initializeSocket(server) {
 
 // Send a message to a specific socket ID using socket.io
 const sendMessageToSocketId = (socketId, messageObject) => {
-  console.log(messageObject);
 
   // Check if the socket.io server is initialized
   if (io) {

@@ -41,5 +41,24 @@ rideRouter.post(
   rideController.confirmRide
 );
 
+// Start the ride
+rideRouter.get(
+  "/start-ride",
+  [
+    query("rideId").isString().notEmpty().isLength({ min: 1 }),
+    query("otp").isString().notEmpty().isLength({ min: 1 }),
+  ],
+  authMiddleware.authCaptain,
+  rideController.startRide
+);
+
+// End the ride
+rideRouter.post(
+  "/end-ride",
+  [body("rideId").isString().notEmpty().isLength({ min: 1 })],
+  authMiddleware.authCaptain,
+  rideController.endRide
+);
+
 // Export the map router
 module.exports = rideRouter;

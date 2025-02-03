@@ -10,6 +10,7 @@ import { SocketContext } from "../context/SocketContext";
 import { UserDataContext } from "../context/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import LiveTracking from "../components/LiveTracking";
 
 // Home page
 export default function Home() {
@@ -148,11 +149,10 @@ export default function Home() {
     setRide(data);
   });
 
-  // Socket events for ride started
+  // Socket events for ride started event
   socket.on("ride-started", (data) => {
-    console.log("ride");
     setWaitingForDriverPanel(false);
-    navigate("/riding", { state: { data } }); // Updated navigate to include ride data
+    navigate("/riding", { state: { ride: data } }); // Updated navigate to include ride data
   });
 
   // Handle pickup location
@@ -227,7 +227,7 @@ export default function Home() {
     setSelectedRidePanel(false);
     // create ride
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BASE_URL}/rides/create-ride`,
         {
           pickup,
@@ -240,7 +240,6 @@ export default function Home() {
           },
         }
       );
-      console.log(response.data);
       // set seraching drivers panel to true
       setSearchingDriversPanel(true);
     } catch (error) {
@@ -251,12 +250,9 @@ export default function Home() {
   // return the home page
   return (
     <div className="relative h-screen overflow-hidden">
-      <h2 className="text-3xl font-bold absolute top-5 left-5">Uber</h2>
-      <div className="h-screen w-screen">
-        <img
-          className="h-full w-full object-cover"
-          src="https://simonpan.com/wp-content/themes/sp_portfolio/assets/uber-suboptimal.jpg"
-        />
+      <h2 className="text-3xl font-bold absolute top-5 left-5 z-10">Uber</h2>
+      <div className="w-screen h-[70%]">
+        <LiveTracking />
       </div>
       <div className="absolute flex justify-end flex-col w-full top-20 h-screen">
         <div className="h-[33%] p-5 bg-white relative">

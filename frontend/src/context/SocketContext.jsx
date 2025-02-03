@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 export const SocketContext = createContext();
 
 // Create a socket instance
-const socket = io(`http://localhost:5000`); // Replace with your server URL
+const socket = io(`${import.meta.env.VITE_BACKEND_URL}`); // Replace with your server URL
 
 // SocketProvider is a component that provides the socket instance to its children
 export default function SocketProvider({ children }) {

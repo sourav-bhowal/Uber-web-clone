@@ -11,6 +11,7 @@ import UserLogout from "./pages/UserLogout";
 import CaptainHome from "./pages/CaptainHome";
 import CaptainLogout from "./pages/CaptainLogout";
 import Riding from "./pages/Riding";
+import CaptainRiding from "./pages/CaptainRiding";
 
 // App component is the root component of the application. It is the parent component of all other components. It is the first component that gets rendered when the application starts.
 export default function App() {
@@ -43,6 +44,7 @@ export default function App() {
         />
         <Route path="/captain-login" element={<CaptainLogin />} />
         <Route path="/captain-signup" element={<CaptainSignUp />} />
+        <Route path="/captain-riding" element={<CaptainRiding />} />
         <Route
           path="/captain-home"
           element={

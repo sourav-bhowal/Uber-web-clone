@@ -64,7 +64,7 @@ module.exports.getRideFare = async (pickup, destination) => {
 module.exports.generateOTP = () => {
   // Generate a random 4 digit OTP
   const otp = crypto.randomInt(1000, 10000); // Generate a random 4 digit OTP using crypto
-  console.log(otp);
+  // Return otp
   return otp;
 };
 
@@ -120,6 +120,9 @@ module.exports.getCaptainsInTheRadius = async (
         maxDistance: radius * 1000, // Convert radius to meters
         spherical: true,
         key: "location",
+        query: {
+          "vehicle.vehicleType": vehicleType,
+        },
       },
     },
   ]);
@@ -127,31 +130,86 @@ module.exports.getCaptainsInTheRadius = async (
   return captains;
 };
 
-// Function to confirm the ride
+// Function to confirm the ride with the given ride id and captain
 module.exports.confirmRide = async ({ rideId, captain }) => {
   if (!rideId) {
     throw new Error("Ride id is required");
   }
 
   // Find the ride with the given ride id and update the status to accepted
-  await rideModel.findOneAndUpdate(
-    {
-      _id: rideId,
-    },
-    {
-      status: "accepted",
-      captain: captain._id,
-    }
-  );
-
-  // Find the ride with the given ride id and populate the user and captain fields
   const ride = await rideModel
-    .findOne({
-      _id: rideId,
-    })
-    .populate("user")
-    .populate("captain")
+    .findOneAndUpdate(
+      {
+        _id: rideId,
+      },
+      {
+        status: "accepted",
+        captainId: captain._id,
+      },
+      { new: true }
+    )
+    .populate("userId")
+    .populate("captainId")
     .select("+otp");
+  // Check if the ride is not found
+  if (!ride) {
+    throw new Error("Ride not found");
+  }
+
+  return ride;
+};
+
+// Function to start the ride with the given ride id and otp
+module.exports.startRide = async ({ rideId, otp, captain }) => {
+  if (!rideId || !otp || !captain) {
+    throw new Error("Ride id and OTP are required");
+  }
+
+  // Find the ride with the given ride id & capatinId and otp and update the status to ongoing
+  const ride = await rideModel
+    .findOneAndUpdate(
+      {
+        _id: rideId,
+        captainId: captain._id, // only the captain who accepted the ride can start the ride
+        otp,
+      },
+      {
+        status: "ongoing",
+      },
+      { new: true }
+    )
+    .populate("userId")
+    .populate("captainId")
+    .select("+otp");
+
+  // Check if the ride is not found
+  if (!ride) {
+    throw new Error("Ride not found");
+  }
+
+  return ride;
+};
+
+// Function to end the ride with the given ride id
+module.exports.endRide = async ({ rideId, captain }) => {
+  if (!rideId) {
+    throw new Error("Ride id is required");
+  }
+
+  // Find the ride with the given ride id and update the status to completed
+  const ride = await rideModel
+    .findOneAndUpdate(
+      {
+        _id: rideId,
+        captainId: captain._id, // only the captain who started the ride can end the ride
+      },
+      {
+        status: "completed",
+      },
+      { new: true }
+    )
+    .populate("userId")
+    .populate("captainId");
 
   // Check if the ride is not found
   if (!ride) {

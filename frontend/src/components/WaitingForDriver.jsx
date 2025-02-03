@@ -11,6 +11,7 @@ WaitingForDriver.propTypes = {
   waitingForDriverRef: PropTypes.object.isRequired,
   setWaitingForDriverPanel: PropTypes.func.isRequired,
   setSearchingDriversPanel: PropTypes.func.isRequired,
+  ride: PropTypes.object,
 };
 
 // component
@@ -18,6 +19,7 @@ export default function WaitingForDriver({
   waitingForDriverRef,
   setWaitingForDriverPanel,
   setSearchingDriversPanel,
+  ride,
 }) {
   return (
     <div
@@ -36,9 +38,23 @@ export default function WaitingForDriver({
           alt={"car"}
         />
         <div className="flex flex-col gap-2 items-end">
-          <h2 className="text-lg font-semibold text-gray-500">Rajesh Kumar</h2>
-          <h3 className="text-xl font-bold">AS-03-H545</h3>
-          <h4 className="text-sm text-gray-500">Red Acura MDX</h4>
+          <h2 className="text-lg font-semibold text-gray-500">
+            {ride?.captainId?.fullName.firstName +
+              " " +
+              ride?.captainId?.fullName.lastName}
+          </h2>
+          <h3 className="text-xl font-bold">
+            {ride?.captainId?.vehicle.plateNumber}
+          </h3>
+          <h4 className="text-sm text-gray-500">
+            {ride?.captainId?.vehicle.color}
+          </h4>
+          <p className="text-lg font-bold text-gray-500">OTP: {ride?.otp}</p>
+          <h5>
+            {/* {
+              ride?.timeToReachPickup?.duration + " away" 
+            } */}
+          </h5>
           <h3 className="text-sm text-green-500 flex gap-2 font-semibold items-center">
             <CheckIcon size={20} />
             Verified
@@ -50,25 +66,23 @@ export default function WaitingForDriver({
         <div className="flex items-center gap-2">
           <MapPinIcon size={20} />
           <div>
-            <h3 className="text-lg font-semibold">562/22-C</h3>
-            <h4 className="text-sm text-gray-500">Kolkata, West Bengal</h4>
+            <h3 className="text-lg font-semibold">Pickup</h3>
+            <h4 className="text-sm text-gray-500 ">{ride?.pickup}</h4>
           </div>
         </div>
         <div className="w-[88%] h-[1px] bg-gray-300 mx-auto" />
         <div className="flex items-center gap-2">
           <LocateIcon size={20} />
           <div>
-            <h3 className="text-lg font-semibold">Second Street</h3>
-            <h4 className="text-sm text-gray-500">
-              1st Sector, Hari Nagar, New Delhi, Delhi 110014
-            </h4>
+            <h3 className="text-lg font-semibold">Dropoff</h3>
+            <h4 className="text-sm text-gray-500">{ride?.destination}</h4>
           </div>
         </div>
         <div className="w-[88%] h-[1px] bg-gray-300 mx-auto" />
         <div className="flex items-center gap-2">
           <CreditCardIcon size={20} />
           <div>
-            <h3 className="text-lg font-semibold">₹100</h3>
+            <h3 className="text-lg font-semibold">₹{ride?.fare}</h3>
             <h4 className="text-sm text-gray-500">Cash</h4>
           </div>
         </div>

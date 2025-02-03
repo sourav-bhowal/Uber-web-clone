@@ -43,8 +43,8 @@ const captainSchema = mongoose.Schema(
       default: "offline",
     },
     location: {
-      type: { type: String, enum: ["Point"], required: true },
-      coordinates: { type: [Number], required: true }, // [longitude, latitude]
+      type: { type: String, enum: ["Point"] },
+      coordinates: { type: [Number] }, // [longitude, latitude]
     },
     vehicle: {
       color: {
