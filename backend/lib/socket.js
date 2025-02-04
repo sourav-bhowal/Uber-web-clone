@@ -61,7 +61,6 @@ function initializeSocket(server) {
 
 // Send a message to a specific socket ID using socket.io
 const sendMessageToSocketId = (socketId, messageObject) => {
-
   // Check if the socket.io server is initialized
   if (io) {
     // Emit the event and data to the socket ID using socket.io

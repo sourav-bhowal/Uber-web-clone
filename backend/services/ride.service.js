@@ -204,9 +204,9 @@ module.exports.endRide = async ({ rideId, captain }) => {
         captainId: captain._id, // only the captain who started the ride can end the ride
       },
       {
-        status: "completed",
+        status: "completed", // Update the status to completed
       },
-      { new: true }
+      { new: true } // Return the updated ride
     )
     .populate("userId")
     .populate("captainId");

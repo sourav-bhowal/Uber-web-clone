@@ -7,11 +7,9 @@ A full-stack ride-sharing application that replicates core Uber functionalities.
 - 🚗 Real-time ride tracking
 - 📍 Live location updates
 - 🗺️ Interactive maps and routing
-- 💳 Payment integration
 - 👤 User authentication
 - 🚘 Driver and passenger modes
 - 📱 Responsive design for mobile and desktop
-- ⭐ Rating system
 - 📍 Address autocomplete
 - 💰 Fare estimation
 
@@ -41,7 +39,6 @@ A full-stack ride-sharing application that replicates core Uber functionalities.
 - MongoDB
 - npm or yarn
 - MapBox/Google Maps API key
-- Stripe account for payments
 
 ### Installation
 
@@ -77,21 +74,11 @@ npm run dev
 - Interactive map interface
 - Route visualization
 
-### 💳 Payment System
-- Secure payment processing with Stripe
-- Fare calculation based on distance and time
-- Payment history
-
 ### 👤 User System
 - Driver and passenger profiles
 - Rating and review system
 - Ride history
 - Authentication and authorization
-
-
-## Screenshots
-
-[Add screenshots of your application here]
 
 ## Mobile Responsiveness
 
@@ -110,12 +97,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by Uber
 - Built with modern web technologies
 - Thanks to all contributors
-
-## Contact
-
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
-Project Link: [https://github.com/yourusername/uber-clone](https://github.com/yourusername/uber-clone)
-
-## Support
-
-For support, email fake@fake.com or join our Slack channel.
