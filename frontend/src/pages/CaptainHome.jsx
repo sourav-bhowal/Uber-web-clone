@@ -131,9 +131,9 @@ const CaptainHome = () => {
   // Return the Captain Home Page
   return (
     <div className="h-screen">
-      <div className="fixed p-6 top-0 flex items-center justify-between w-screen">
+      <div className="fixed p-6 top-0 flex items-center justify-between w-screen z-10">
         <img
-          className="w-16"
+          className="w-16 z-10"
           src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
           alt=""
         />

@@ -251,11 +251,11 @@ export default function Home() {
   return (
     <div className="relative h-screen overflow-hidden">
       <h2 className="text-3xl font-bold absolute top-5 left-5 z-10">Uber</h2>
-      <div className="w-screen h-[70%]">
+      <div className="w-screen h-[70%] relative">
         <LiveTracking />
       </div>
-      <div className="absolute flex justify-end flex-col w-full top-20 h-screen">
-        <div className="h-[33%] p-5 bg-white relative">
+      <div className="absolute flex justify-end flex-col w-full top-20 h-screen pointer-events-none">
+        <div className="h-[33%] p-5 bg-white relative pointer-events-auto">
           <div className="flex justify-between">
             <h3 className="text-2xl font-semibold">Find a trip</h3>
             {showPanel && (
