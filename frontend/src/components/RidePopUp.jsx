@@ -27,10 +27,11 @@ const RidePopUp = (props) => {
               props?.ride?.rideDetails?.userId?.fullName?.lastName}
           </h2>
         </div>
-        <h5 className="text-lg font-semibold">{
-          props?.ride?.timeToReachPickup?.distance + " | " +
-          props.ride?.timeToReachPickup.duration
-        }</h5>
+        <h5 className="text-lg font-semibold">
+          {props?.ride?.timeToReachPickup?.distance +
+            " | " +
+            props.ride?.timeToReachPickup.duration}
+        </h5>
       </div>
       <div className="flex gap-2 justify-between flex-col items-center">
         <div className="w-full mt-5">
@@ -50,17 +51,34 @@ const RidePopUp = (props) => {
             <i className="text-lg ri-map-pin-2-fill"></i>
             <div>
               <h3 className="text-lg font-medium flex items-center gap-1">
-              <LocateFixed size={20} />
-              Dropoff</h3>
+                <LocateFixed size={20} />
+                Dropoff
+              </h3>
               <p className="text-sm mt-1 text-gray-600">
                 {props.ride?.rideDetails?.destination}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-5 p-3 border-b-2">
+            <i className="ri-road-map-line"></i>
+            <div>
+              <h3 className="text-lg font-medium flex items-center gap-1">
+                <i className="ri-road-map-line"></i>
+                Distance & Time
+              </h3>
+              <p className="text-sm mt-1 text-gray-600">
+                {props.ride?.pickupToDestinationDistanceTime?.distance +
+                  " | " +
+                  props.ride?.pickupToDestinationDistanceTime?.duration}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3">
             <i className="ri-currency-line"></i>
             <div>
-              <h3 className="text-lg font-medium">₹{props.ride?.rideDetails?.fare} </h3>
+              <h3 className="text-lg font-medium">
+                ₹{props.ride?.rideDetails?.fare}{" "}
+              </h3>
               <p className="text-sm mt-1 text-gray-600">Cash</p>
             </div>
           </div>

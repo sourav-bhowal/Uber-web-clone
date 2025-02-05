@@ -29,6 +29,23 @@ module.exports.createRide = async (req, res) => {
     // Get the pickup coordinates
     const pickupCoordinates = await mapService.getAddressCoordinates(pickup);
 
+    // Get the destination coordinates
+    const destinationCoordinates = await mapService.getAddressCoordinates(
+      destination
+    );
+
+    // Get the distance and time between pickup and destination
+    const pickupToDestDistTime = await mapService.getDistanceTime(
+      `${pickupCoordinates.ltd},${pickupCoordinates.lng}`,
+      `${destinationCoordinates.ltd},${destinationCoordinates.lng}`
+    );
+
+    // Distance and time between pickup and destination
+    const pickupToDestinationDistanceTime = {
+      distance: pickupToDestDistTime.distance.text,
+      duration: pickupToDestDistTime.duration.text,
+    };
+
     // Get the nearest captains in the radius
     const captainsInRadius = await rideService.getCaptainsInTheRadius(
       pickupCoordinates.ltd,
@@ -57,7 +74,7 @@ module.exports.createRide = async (req, res) => {
       const timeToReachPickup = {
         distance: distanceTime.distance.text,
         duration: distanceTime.duration.text,
-      }
+      };
 
       // Emit the new-ride event to the captain
       sendMessageToSocketId(captain.socketId, {
@@ -65,6 +82,7 @@ module.exports.createRide = async (req, res) => {
         data: {
           rideDetails: rideWithUser,
           timeToReachPickup,
+          pickupToDestinationDistanceTime,
         },
       });
     });
@@ -106,8 +124,6 @@ module.exports.confirmRide = async (req, res) => {
   // Get the ride id from the request body
   const { rideId } = req.body;
 
-  console.log(rideId, req.captain._id);
-
   try {
     // Confirm the ride with the given ride id
     const ride = await rideService.confirmRide({
@@ -141,7 +157,11 @@ module.exports.startRide = async (req, res) => {
 
   try {
     // Start the ride with the given ride id and otp
-    const ride = await rideService.startRide({ rideId, otp, captain: req.captain });
+    const ride = await rideService.startRide({
+      rideId,
+      otp,
+      captain: req.captain,
+    });
 
     // Emit the ride-started event to the user
     sendMessageToSocketId(ride.userId.socketId, {
