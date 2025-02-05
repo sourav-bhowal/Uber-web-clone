@@ -15,6 +15,9 @@ const defaultCenter = {
   lng: -122.4194,
 };
 
+// libraries is an array of libraries to load
+const libraries = ["places"];
+
 // LiveTracking is a component that displays the live tracking of the user
 const LiveTracking = () => {
   const [position, setPosition] = useState(null);
@@ -93,7 +96,7 @@ const LiveTracking = () => {
       <LoadScript
         googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
         version="beta"
-        libraries={["marker"]}
+        libraries={libraries}
       >
         <GoogleMap
           mapContainerStyle={containerStyle}

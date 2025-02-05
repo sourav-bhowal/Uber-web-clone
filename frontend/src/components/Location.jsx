@@ -17,7 +17,7 @@ export default function Location({
   setPickup,
   setDropoff,
 }) {
-  // Hnadles the suggestion click
+  // Handles the suggestion click
   const handleSuggestionClick = (suggestion) => {
     if (activeField === "pickup") {
       setPickup(suggestion);
@@ -25,11 +25,12 @@ export default function Location({
       setDropoff(suggestion);
     }
   };
+
   return (
-    <div className="flex flex-col gap-2 h-0 bg-white p-5" ref={panelRef}>
+    <div className="flex flex-col gap-2 h-0 bg-white p-5 pointer-events-auto" ref={panelRef}>
       {suggestions.map((location, index) => (
         <div
-          className="flex items-center gap-4 my-4 justify-start bg-gray-100 p-3 rounded-xl border-2"
+          className="flex items-center gap-4 my-4 justify-start bg-gray-100 p-3 rounded-xl border-2 cursor-pointer"
           key={index}
           onClick={() => handleSuggestionClick(location)}
         >

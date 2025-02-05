@@ -90,6 +90,7 @@ module.exports.loginCaptain = async (req, res, next) => {
     httpOnly: true,
     secure: false,
     expires: new Date(Date.now() + 86400000), // 1 day
+    sameSite: "none",
   });
 
   // Send the response
